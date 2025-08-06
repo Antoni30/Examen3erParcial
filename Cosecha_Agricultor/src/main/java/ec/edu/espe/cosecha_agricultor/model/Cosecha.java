@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -34,4 +35,6 @@ public class Cosecha {
 
     @Column(name = "fecha_registro", nullable = false)
     private LocalDateTime fechaRegistro;
+
+
 }
