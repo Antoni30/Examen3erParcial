@@ -27,4 +27,15 @@ public class CosechaController {
         CosechaDTO creado = cosechaService.crearCosecha(dto);
         return new ResponseEntity<>(creado, HttpStatus.CREATED);
     }
+    @PutMapping("/{id}")
+    public ResponseEntity<CosechaDTO> actualizar(@PathVariable UUID id, @Valid @RequestBody CosechaDTO dto) {
+        CosechaDTO actualizado = cosechaService.actualizarCosecha(id, dto);
+        return ResponseEntity.ok(actualizado);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> eliminar(@PathVariable UUID id) {
+        cosechaService.eliminarCosecha(id);
+        return ResponseEntity.noContent().build();
+    }
 }

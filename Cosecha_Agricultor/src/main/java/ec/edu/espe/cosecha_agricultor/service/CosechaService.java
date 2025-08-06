@@ -85,6 +85,13 @@ public class CosechaService {
         cosecha = cosechaRepository.save(cosecha);
         return mapToDTO(cosecha);
     }
+    @Transactional
+    public void eliminarCosecha(UUID id) {
+        Cosecha cosecha = cosechaRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Cosecha no encontrada"));
+
+        cosechaRepository.delete(cosecha);
+    }
 
     private CosechaDTO mapToDTO(Cosecha cosecha) {
         return CosechaDTO.builder()

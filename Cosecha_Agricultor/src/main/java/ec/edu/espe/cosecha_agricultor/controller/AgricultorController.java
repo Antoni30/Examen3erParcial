@@ -28,4 +28,17 @@ public class AgricultorController {
         AgricultorDTO creado = agricultorService.crearAgricultor(dto);
         return new ResponseEntity<>(creado, HttpStatus.CREATED);
     }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<AgricultorDTO> actualizar(@PathVariable UUID id, @Valid @RequestBody AgricultorDTO dto) {
+        AgricultorDTO actualizado = agricultorService.actualizarAgricultor(id, dto);
+        return ResponseEntity.ok(actualizado);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> eliminar(@PathVariable UUID id) {
+        agricultorService.eliminarAgricultor(id);
+        return ResponseEntity.noContent().build();
+    }
+
 }

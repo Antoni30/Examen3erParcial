@@ -25,7 +25,22 @@ public class AgricultorService {
 
         return mapToDTO(agricultor);
     }
+    public AgricultorDTO actualizarAgricultor(UUID id, AgricultorDTO dto) {
+        Agricultor agricultor = agricultorRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Agricultor no encontrado"));
 
+        agricultor.setNombre(dto.getNombre());
+        agricultor = agricultorRepository.save(agricultor);
+
+        return mapToDTO(agricultor);
+    }
+
+    public void eliminarAgricultor(UUID id) {
+        Agricultor agricultor = agricultorRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Agricultor no encontrado"));
+
+        agricultorRepository.delete(agricultor);
+    }
     public List<AgricultorDTO> obtenerTodos() {
         return agricultorRepository.findAll()
                 .stream()
