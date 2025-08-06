@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: microservicios-agricultura
+  labels:
+    name: microservicios-agricultura
+    app.kubernetes.io/name: agricultura-system
+

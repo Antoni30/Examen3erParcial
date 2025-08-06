@@ -1,0 +1,36 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: microservicios-ingress
+  namespace: microservicios-agricultura
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+    nginx.ingress.kubernetes.io/ssl-redirect: "false"
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: agricultura.local
+    http:
+      paths:
+      - path: /cosecha
+        pathType: Prefix
+        backend:
+          service:
+            name: cosecha-agricultor-service
+            port:
+              number: 8080
+      - path: /inventario
+        pathType: Prefix
+        backend:
+          service:
+            name: inventario-service
+            port:
+              number: 8081
+      - path: /rabbitmq
+        pathType: Prefix
+        backend:
+          service:
+            name: rabbitmq-service
+            port:
+              number: 15672
+
