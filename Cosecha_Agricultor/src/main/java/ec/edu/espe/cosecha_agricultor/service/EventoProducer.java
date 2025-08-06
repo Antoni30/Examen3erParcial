@@ -20,7 +20,11 @@ public class EventoProducer {
         try {
             String mensajeJson = objectMapper.writeValueAsString(eventoDTO);
             log.info("mensajeJson: {}", mensajeJson);
-            rabbitTemplate.convertAndSend("inventario.cola", mensajeJson);
+
+            // ENVIAR A AMBAS COLAS: inventario Y facturación
+            rabbitTemplate.convertAndSend(RabbitMQConfig.EXCHANGE_NAME, RabbitMQConfig.ROUTING_KEY_NUEVA, mensajeJson);
+            log.info("Evento enviado al exchange '{}' con routing key '{}'", RabbitMQConfig.EXCHANGE_NAME, RabbitMQConfig.ROUTING_KEY_NUEVA);
+
         } catch (Exception e) {
             log.error("Error al enviar el evento de nueva cosecha: {}", e.getMessage());
             e.printStackTrace();

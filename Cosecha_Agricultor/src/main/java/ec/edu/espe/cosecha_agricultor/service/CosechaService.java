@@ -10,7 +10,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.OffsetDateTime;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
@@ -22,7 +21,7 @@ public class CosechaService {
 
     private final CosechaRepository cosechaRepository;
     private final AgricultorRepository agricultorRepository;
-    private final EventoProducer eventoProducer; // productor de eventos a RabbitMQ
+    private final EventoProducer eventoProducer;
 
     /**
      * Crea una nueva cosecha, la persiste y publica un evento "nueva_cosecha".
@@ -44,20 +43,19 @@ public class CosechaService {
 
         cosecha = cosechaRepository.save(cosecha);
 
-        // Preparar y publicar evento
+        // Preparar y publicar evento - Corregido el constructor
         EventoDTO evento = new EventoDTO(
                 "nueva_cosecha",
                 cosecha.getId(),
                 cosecha.getProducto(),
-                cosecha.getToneladas(),
-                1
+                cosecha.getToneladas(), // tonelada en EventoDTO
+                1.0 // status
         );
 
         try {
             eventoProducer.enviarEventoNuevaCosecha(evento);
         } catch (Exception e) {
-
-            e.printStackTrace();
+            System.err.println("Error al enviar evento: " + e.getMessage());
         }
 
         return mapToDTO(cosecha);
@@ -76,20 +74,17 @@ public class CosechaService {
         Cosecha cosecha = cosechaRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Cosecha no encontrada"));
 
-        // Si quieren validar que el agricultor cambie, pueden buscarlo de nuevo; aquí asumimos que no cambia.
         cosecha.setProducto(dto.getProducto());
         cosecha.setToneladas(dto.getToneladas());
         cosecha.setUbicacion(dto.getUbicacion());
-        // No tocamos fechaRegistro ni agricultor por defecto (ajusta según necesidad).
 
         cosecha = cosechaRepository.save(cosecha);
         return mapToDTO(cosecha);
     }
-    @Transactional
+
     public void eliminarCosecha(UUID id) {
         Cosecha cosecha = cosechaRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Cosecha no encontrada"));
-
         cosechaRepository.delete(cosecha);
     }
 

@@ -67,6 +67,31 @@ public class InsumoService {
         return false;
     }
 
+    // NUEVO MÉTODO: Descontar stock de insumos
+    public boolean descontarStock(String nombreInsumo, double cantidadDescuento) {
+        try {
+            List<Insumo> insumos = insumoRepository.findByNombreInsumoContaining(nombreInsumo);
+
+            if (insumos.isEmpty()) {
+                return false; // No se encontró el insumo
+            }
+
+            // Buscar el insumo con suficiente stock
+            for (Insumo insumo : insumos) {
+                if (insumo.getCantidadDisponible() >= cantidadDescuento) {
+                    insumo.setCantidadDisponible(insumo.getCantidadDisponible() - cantidadDescuento);
+                    insumoRepository.save(insumo);
+                    return true;
+                }
+            }
+
+            return false; // No hay suficiente stock
+
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
     private InsumoDTO convertToDTO(Insumo insumo) {
         return new InsumoDTO(
                 insumo.getIdCosecha(),
