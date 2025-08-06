@@ -88,6 +88,24 @@ public class CosechaService {
         cosechaRepository.delete(cosecha);
     }
 
+    // NUEVO MÉTODO: Actualizar estado de cosecha (para notificaciones de Facturación)
+    @Transactional
+    public CosechaDTO actualizarEstado(UUID id, String nuevoEstado, String facturaId) {
+        Cosecha cosecha = cosechaRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Cosecha no encontrada con ID: " + id));
+
+        // Actualizar el estado de la cosecha
+        cosecha.setEstado(nuevoEstado);
+
+        // Si se proporciona facturaId, también lo guardamos (opcional)
+        if (facturaId != null && !facturaId.isEmpty()) {
+            cosecha.setFacturaId(facturaId);
+        }
+
+        cosecha = cosechaRepository.save(cosecha);
+        return mapToDTO(cosecha);
+    }
+
     private CosechaDTO mapToDTO(Cosecha cosecha) {
         return CosechaDTO.builder()
                 .id(cosecha.getId())

@@ -36,5 +36,12 @@ public class Cosecha {
     @Column(name = "fecha_registro", nullable = false)
     private LocalDateTime fechaRegistro;
 
+    // NUEVOS CAMPOS: Para el manejo de estados y facturación
+    @Column(name = "estado", length = 50)
+    @Builder.Default
+    private String estado = "REGISTRADA";
+
+    @Column(name = "factura_id", length = 100)
+    private String facturaId;
 
 }

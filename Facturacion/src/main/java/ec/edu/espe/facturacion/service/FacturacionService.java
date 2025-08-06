@@ -91,7 +91,7 @@ public class FacturacionService {
 
     private void notificarEstadoFacturada(String cosechaId, String facturaId) {
         try {
-            String url = centralServiceUrl + "/cosechas/" + cosechaId + "/estado";
+            String url = centralServiceUrl + "/api/cosechas/" + cosechaId + "/estado";
 
             ActualizarEstadoCosechaDTO actualizacion = ActualizarEstadoCosechaDTO.builder()
                     .estado("FACTURADA")
