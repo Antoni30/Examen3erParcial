@@ -11,6 +11,7 @@ import java.util.UUID;
 public class EventoDTO {
     private String evento;
     private UUID cosecha_id;
+    private String producto;
     private double tonelada;
     private double status;
 }
