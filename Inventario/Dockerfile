@@ -1,44 +1,21 @@
-# Usar una imagen base con OpenJDK 21
-FROM openjdk:21-jdk-slim
+# Etapa 1: Build con Maven
+FROM maven:3.9.6-eclipse-temurin-21 AS builder
 
-# Establecer el directorio de trabajo
 WORKDIR /app
 
-# Copiar el archivo pom.xml y el wrapper de Maven
-COPY pom.xml .
-COPY mvnw .
-COPY .mvn .mvn
+COPY . .
 
-# Dar permisos de ejecución al wrapper de Maven
-RUN chmod +x mvnw
+RUN mvn clean package -DskipTests
 
-# Descargar las dependencias (esto se cachea si el pom.xml no cambia)
-RUN ./mvnw dependency:go-offline -B
+# Etapa 2: Imagen final
+FROM eclipse-temurin:21-jdk-alpine
 
-# Copiar el código fuente
-COPY src src
-
-# Construir la aplicación
-RUN ./mvnw clean package -DskipTests
-
-# Crear un usuario no-root para seguridad
-RUN addgroup --system spring && adduser --system spring --ingroup spring
+RUN addgroup -S spring && adduser -S spring -G spring
 USER spring:spring
 
-# Exponer el puerto 8081
-EXPOSE 8081
+WORKDIR /home/spring
 
-# Configurar variables de entorno para la base de datos y RabbitMQ
-ENV SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/bd_distri
-ENV SPRING_DATASOURCE_USERNAME=postgres
-ENV SPRING_DATASOURCE_PASSWORD=adminadmin123
-ENV SPRING_RABBITMQ_HOST=rabbitmq
-ENV SPRING_RABBITMQ_PORT=5672
-ENV SPRING_RABBITMQ_USERNAME=admin
-ENV SPRING_RABBITMQ_PASSWORD=admin
+COPY --from=builder /app/target/Inventario-0.0.1-SNAPSHOT.jar app.jar
 
-# Configurar JVM para contenedores
-ENV JAVA_OPTS="-Xmx512m -Xms256m -XX:+UseContainerSupport"
 
-# Ejecutar la aplicación
-CMD ["sh", "-c", "java $JAVA_OPTS -jar target/Inventario-0.0.1-SNAPSHOT.jar"]
+ENTRYPOINT ["java", "-jar", "app.jar"]

@@ -15,7 +15,7 @@ USER spring:spring
 
 WORKDIR /home/spring
 
-COPY --from=builder /app/target/Cosecha_Agricultor-0.0.1-SNAPSHOT.jar app.jar
+COPY --from=builder /app/target/Facturacion-0.0.1-SNAPSHOT.jar app.jar
 
 
 ENTRYPOINT ["java", "-jar", "app.jar"]
