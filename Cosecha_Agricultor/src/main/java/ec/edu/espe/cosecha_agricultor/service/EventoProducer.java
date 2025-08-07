@@ -1,6 +1,5 @@
 package ec.edu.espe.cosecha_agricultor.service;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import ec.edu.espe.cosecha_agricultor.config.RabbitMQConfig;
 import ec.edu.espe.cosecha_agricultor.dto.EventoDTO;
 import lombok.RequiredArgsConstructor;
@@ -14,16 +13,13 @@ import org.springframework.stereotype.Service;
 public class EventoProducer {
 
     private final RabbitTemplate rabbitTemplate;
-    private final ObjectMapper objectMapper;
 
     public void enviarEventoNuevaCosecha(EventoDTO eventoDTO) {
         try {
-            String mensajeJson = objectMapper.writeValueAsString(eventoDTO);
-            log.info("mensajeJson: {}", mensajeJson);
-
-            // ENVIAR A AMBAS COLAS: inventario Y facturación
-            rabbitTemplate.convertAndSend(RabbitMQConfig.EXCHANGE_NAME, RabbitMQConfig.ROUTING_KEY_NUEVA, mensajeJson);
-            log.info("Evento enviado al exchange '{}' con routing key '{}'", RabbitMQConfig.EXCHANGE_NAME, RabbitMQConfig.ROUTING_KEY_NUEVA);
+            // ENVIAR DIRECTAMENTE EL OBJETO: RabbitTemplate se encarga de la serialización
+            rabbitTemplate.convertAndSend(RabbitMQConfig.EXCHANGE_NAME, RabbitMQConfig.ROUTING_KEY_NUEVA, eventoDTO);
+            log.info("Evento enviado al exchange '{}' con routing key '{}' para cosecha: {}",
+                    RabbitMQConfig.EXCHANGE_NAME, RabbitMQConfig.ROUTING_KEY_NUEVA, eventoDTO.getCosecha_id());
 
         } catch (Exception e) {
             log.error("Error al enviar el evento de nueva cosecha: {}", e.getMessage());

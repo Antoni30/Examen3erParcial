@@ -9,8 +9,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class EventoDTO {
     private String evento;
-    private String cosecha_id;
+    private String cosecha_id;    // Cambiado de UUID a String para coincidir con las entidades
     private String producto;
     private double tonelada;
-    private int status;
+    private int status;           // Cambiado de double a int para coincidir con la entidad Evento
 }
