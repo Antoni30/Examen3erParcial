@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - name: ms-inventario
-          image: milenamaldonado/inventario:latest
+          image: tonir30/ms-inventario:latest
           imagePullPolicy: Always
           ports:
             - containerPort: 8081
@@ -38,3 +38,4 @@ spec:
     - protocol: TCP
       port: 80
       targetPort: 8081
+  type: NodePort

@@ -9,28 +9,34 @@ metadata:
 spec:
   ingressClassName: nginx
   rules:
-  - host: agricultura.local
-    http:
-      paths:
-      - path: /cosecha
-        pathType: Prefix
-        backend:
-          service:
-            name: cosecha-agricultor-service
-            port:
-              number: 8080
-      - path: /inventario
-        pathType: Prefix
-        backend:
-          service:
-            name: inventario-service
-            port:
-              number: 8081
-      - path: /rabbitmq
-        pathType: Prefix
-        backend:
-          service:
-            name: rabbitmq-service
-            port:
-              number: 15672
-
+    - host: agricultura.local
+      http:
+        paths:
+          - path: /cosecha
+            pathType: Prefix
+            backend:
+              service:
+                name: ms-cosecha-agricultor
+                port:
+                  number: 80
+          - path: /facturacion
+            pathType: Prefix
+            backend:
+              service:
+                name: ms-facturacion
+                port:
+                  number: 80
+          - path: /inventario
+            pathType: Prefix
+            backend:
+              service:
+                name: ms-inventario
+                port:
+                  number: 80
+          - path: /rabbitmq
+            pathType: Prefix
+            backend:
+              service:
+                name: rabbitmq
+                port:
+                  number: 15672
