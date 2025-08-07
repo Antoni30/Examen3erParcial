@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - name: ms-cosecha-agricultor
-          image: tonir30/ms-cosecha:latest
+          image: milenamaldonado/cosecha:latest
           imagePullPolicy: Always
           ports:
             - containerPort: 8080

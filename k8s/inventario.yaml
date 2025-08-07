@@ -1,42 +1,40 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: ms-cosecha-agricultor
+  name: ms-inventario
   namespace: microservicios-agricultura
   labels:
-    app: ms-cosecha-agricultor
+    app: ms-inventario
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: ms-cosecha-agricultor
+      app: ms-inventario
   template:
     metadata:
       labels:
-        app: ms-cosecha-agricultor
+        app: ms-inventario
     spec:
       containers:
-        - name: ms-cosecha-agricultor
-          image: tonir30/ms-cosecha:latest
+        - name: ms-inventario
+          image: milenamaldonado/inventario:latest
           imagePullPolicy: Always
           ports:
-            - containerPort: 8080
-
-
-
+            - containerPort: 8081
 
 ---
+
 apiVersion: v1
 kind: Service
 metadata:
-  name: ms-cosecha-agricultor
+  name: ms-inventario
   namespace: microservicios-agricultura
   labels:
-    app: ms-cosecha-agricultor
+    app: ms-inventario
 spec:
   selector:
-    app: ms-cosecha-agricultor
+    app: ms-inventario
   ports:
     - protocol: TCP
       port: 80
-      targetPort: 8080
+      targetPort: 8081
