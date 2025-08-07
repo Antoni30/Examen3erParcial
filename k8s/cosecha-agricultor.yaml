@@ -1,75 +1,42 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: cosecha-agricultor
+  name: ms-cosecha-agricultor
   namespace: microservicios-agricultura
   labels:
-    app: cosecha-agricultor
+    app: ms-cosecha-agricultor
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: cosecha-agricultor
+      app: ms-cosecha-agricultor
   template:
     metadata:
       labels:
-        app: cosecha-agricultor
+        app: ms-cosecha-agricultor
     spec:
       containers:
-      - name: cosecha-agricultor
-        image: cosecha-agricultor:latest
-        imagePullPolicy: Never  # Para imágenes locales
-        ports:
-        - containerPort: 8080
-        env:
-        - name: SPRING_DATASOURCE_URL
-          value: "jdbc:postgresql://postgres-service:5432/bd_distri"
-        - name: SPRING_DATASOURCE_USERNAME
-          value: "postgres"
-        - name: SPRING_DATASOURCE_PASSWORD
-          value: "adminadmin123"
-        - name: SPRING_RABBITMQ_HOST
-          value: "rabbitmq-service"
-        - name: SPRING_RABBITMQ_PORT
-          value: "5672"
-        - name: SPRING_RABBITMQ_USERNAME
-          value: "admin"
-        - name: SPRING_RABBITMQ_PASSWORD
-          value: "admin"
-        resources:
-          requests:
-            memory: "256Mi"
-            cpu: "250m"
-          limits:
-            memory: "512Mi"
-            cpu: "500m"
-        livenessProbe:
-          httpGet:
-            path: /
-            port: 8080
-          initialDelaySeconds: 60
-          periodSeconds: 30
-        readinessProbe:
-          httpGet:
-            path: /
-            port: 8080
-          initialDelaySeconds: 30
-          periodSeconds: 10
+        - name: ms-cosecha-agricultor
+          image: tonir30/ms-cosecha:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8080
+
+
+
+
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: cosecha-agricultor-service
+  name: ms-cosecha-agricultor
   namespace: microservicios-agricultura
   labels:
-    app: cosecha-agricultor
+    app: ms-cosecha-agricultor
 spec:
-  type: ClusterIP
-  ports:
-  - port: 8080
-    targetPort: 8080
-    protocol: TCP
-    name: http
   selector:
-    app: cosecha-agricultor
-
+    app: ms-cosecha-agricultor
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8080

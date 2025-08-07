@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ms-facturacion
+  namespace: distribuidasms
+  labels:
+    app: ms-facturacion
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ms-facturacion
+  template:
+    metadata:
+      labels:
+        app: ms-facturacion
+    spec:
+      containers:
+        - name: ms-facturacion
+          image: tonir30/ms-facturacion:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8083
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ms-facturacion
+  namespace: distribuidasms
+  labels:
+    app: ms-facturacion
+spec:
+  selector:
+    app: ms-facturacion
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8083
